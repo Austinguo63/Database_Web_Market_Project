@@ -1,0 +1,18 @@
+@app.route('/publish', methods=['GET','POST'])
+
+def publish():
+    error=None
+    if request.method == 'POST':
+        result = valid_publish(request.form.get('Seller_Email'), request.form['Listing_ID'], request.form['Category'], request.form['Title'], request.form['Product_Name'], request.form['Product_Description'], request.form['Price'], request.form['Quantity'])
+        if result:
+            return render_template('publish.html', error=error, result=result)
+        else:
+            error = 'invalid input name'
+    return render_template('publish.html', error=error)
+
+def valid_publish(Seller_Email, Listing_ID, Category, Title, Product_Name, Product_Description, Price, Quantity):
+    
+    connection = mydb.connect('project.db')
+    #connection.execute('DROP TABLE users')
+    connection.execute('INSERT INTO Product_Listing (Seller_Email, Listing_ID, Category, Title, Product_Name, Product_Description, Price, Quantity) VALUES (?,?,?,?,?,?,?,?);', (Seller_Email, Listing_ID, Category, Title, Product_Name, Product_Description, Price, Quantity))
+    return
